@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="game">
+        <div id="grid"></div>
+        <div id="guess-inputs">
+            <input type="text" class="guess-input" maxlength="1" />
+            <input type="text" class="guess-input" maxlength="1" />
+            <input type="text" class="guess-input" maxlength="1" />
+            <input type="text" class="guess-input" maxlength="1" />
+            <input type="text" class="guess-input" maxlength="1" />
+        </div>
+        <button id="submit-guess">Submit</button>
+        <div id="info-message"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
