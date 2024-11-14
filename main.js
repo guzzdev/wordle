@@ -1,12 +1,29 @@
-const targetWord = "APPLE"; // The word to guess
+let targetWord = "";
 let currentRow = 0;
 const maxGuesses = 6;
 
+fetch('https://raw.githubusercontent.com/guzzdev/wordle/refs/heads/main/words')
+    .then(response => response.text())
+    .then(data => {
+        const words = data.split('\n').map(word => word.trim().toUpperCase());
+        targetWord = words[Math.floor(Math.random() * words.length)];
+        console.log(`Target word: ${targetWord}`); // For debugging purposes
+    });
+
 const inputs = document.querySelectorAll('.guess-input');
+const grid = document.getElementById('grid');
+const submitButton = document.getElementById('submit-guess');
+const resetButton = document.getElementById('reset-game');
+const infoMessage = document.getElementById('info-message');
+
+inputs[0].focus();
+
 inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
         if (e.key === "Backspace" && input.value === '') {
             if (index > 0) inputs[index - 1].focus();
+        } else if (e.key === "Enter") {
+            handleGuess();
         }
     });
     input.addEventListener('input', (e) => {
@@ -22,19 +39,18 @@ inputs.forEach((input, index) => {
     });
 });
 
-document.getElementById('submit-guess').addEventListener('click', () => {
-    const guessInputs = document.querySelectorAll('.guess-input');
-    let guess = '';
-    guessInputs.forEach(input => {
-        guess += input.value.toUpperCase();
-    });
+submitButton.addEventListener('click', handleGuess);
+resetButton.addEventListener('click', resetGame);
+
+function handleGuess() {
+    const guess = Array.from(inputs).map(input => input.value.toUpperCase()).join('');
 
     if (guess.length !== 5) {
         alert("Please enter a 5-letter word.");
         return;
     }
 
-    const grid = document.getElementById('grid');
+    const fragment = document.createDocumentFragment();
     for (let i = 0; i < 5; i++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
@@ -48,13 +64,13 @@ document.getElementById('submit-guess').addEventListener('click', () => {
             cell.classList.add('absent');
         }
 
-        grid.appendChild(cell);
+        fragment.appendChild(cell);
     }
+    grid.appendChild(fragment);
 
     currentRow++;
-    guessInputs.forEach(input => {
-        input.value = '';
-    });
+    inputs.forEach(input => input.value = '');
+    inputs[0].focus();
 
     if (guess === targetWord) {
         announce("You win!");
@@ -63,15 +79,35 @@ document.getElementById('submit-guess').addEventListener('click', () => {
         announce(`You lose! The word was ${targetWord}.`);
         endGame();
     }
-});
+}
 
 function announce(message) {
-    document.getElementById('info-message').textContent = message;
+    infoMessage.textContent = message;
+    infoMessage.style.display = 'block';
 }
 
 function endGame() {
-    document.getElementById('submit-guess').disabled = true;
+    submitButton.disabled = true;
+    inputs.forEach(input => input.disabled = true);
+}
+
+function resetGame() {
+    targetWord = "";
+    currentRow = 0;
+    fetch('words')
+        .then(response => response.text())
+        .then(data => {
+            const words = data.split('\n').map(word => word.trim().toUpperCase());
+            targetWord = words[Math.floor(Math.random() * words.length)];
+            console.log(`New target word: ${targetWord}`); // For debugging purposes
+        });
+
+    grid.innerHTML = '';
     inputs.forEach(input => {
-        input.disabled = true;
+        input.value = '';
+        input.disabled = false;
     });
+    submitButton.disabled = false;
+    infoMessage.style.display = 'none';
+    inputs[0].focus();
 }

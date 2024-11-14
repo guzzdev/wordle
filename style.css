@@ -5,10 +5,15 @@ body {
     height: 100vh;
     background-color: #f3f4f6;
     font-family: Arial, sans-serif;
+    margin: 0;
 }
 
 #game {
     text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #grid {
@@ -27,20 +32,21 @@ body {
     align-items: center;
     font-size: 24px;
     font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .correct {
-    background-color: green;
+    background-color: #6aaa64;
     color: white;
 }
 
 .present {
-    background-color: yellow;
+    background-color: #c9b458;
     color: black;
 }
 
 .absent {
-    background-color: gray;
+    background-color: #787c7e;
     color: white;
 }
 
@@ -58,10 +64,59 @@ body {
     font-size: 24px;
     font-weight: bold;
     border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.guess-input:focus {
+    border-color: #6aaa64;
+    box-shadow: 0 0 5px rgba(106, 170, 100, 0.5);
+    outline: none;
+}
+
+.guess-input:hover {
+    border-color: #6aaa64;
+}
+
+#submit-guess, #reset-game {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #6aaa64;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 5px;
+}
+
+#submit-guess:hover, #reset-game:hover {
+    background-color: #5a9a54;
+}
+
+#submit-guess:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 #info-message {
     margin-top: 20px;
     font-size: 18px;
     font-weight: bold;
+    display: none;
+    color: #333;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.cell {
+    animation: bounce 0.3s ease-in-out;
 }
